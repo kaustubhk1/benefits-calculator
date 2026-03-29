@@ -114,13 +114,25 @@ export function WelcomeScreen() {
             </div>
           )}
 
-          <Button
-            onClick={handleContinue}
-            disabled={!selectedMode}
-            className="w-full disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Continue
-          </Button>
+          {user ? (
+            <Button
+              onClick={handleContinue}
+              disabled={!selectedMode}
+              className="w-full text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Continue
+            </Button>
+          ) : (
+            <div className="mt-8 p-6 bg-blue-50 border-2 border-blue-200 rounded-xl text-center shadow-sm">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Secure Account Required</h3>
+              <p className="text-base text-gray-700 mb-6">
+                To protect your privacy and ensure your answers are securely saved, you must sign in to start the assessment.
+              </p>
+              <Button onClick={() => setCurrentScreen('auth')} className="w-full text-lg py-4">
+                Sign In or Create Account
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-5">
