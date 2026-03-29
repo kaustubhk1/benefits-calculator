@@ -8,6 +8,7 @@ import { HealthScreen } from './screens/HealthScreen';
 import { CaringScreen } from './screens/CaringScreen';
 import { ResultsScreen } from './screens/ResultsScreen';
 import { LetterScreen } from './screens/LetterScreen';
+import { AuthScreen } from './screens/AuthScreen';
 
 function App() {
   const { currentScreen } = useApp();
@@ -23,6 +24,7 @@ function App() {
       {currentScreen === 'caring' && <CaringScreen />}
       {currentScreen === 'results' && <ResultsScreen />}
       {currentScreen === 'letter' && <LetterScreen />}
+      {currentScreen === 'auth' && <AuthScreen />}
     </>
   );
 }

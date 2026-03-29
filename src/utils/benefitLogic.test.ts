@@ -3,10 +3,11 @@ import { calculateEligibleBenefits } from './benefitLogic';
 import { UserAnswers } from '../types';
 
 const defaultAnswers: UserAnswers = {
+  mode: 'self',
   ageBand: '65-74',
   country: 'England',
   housingType: 'own-no-mortgage',
-  livingSituation: 'living-alone',
+  livingSituation: 'alone',
   incomeBand: 'over-500',
   savingsBand: 'over-16000',
   currentBenefits: {
@@ -16,15 +17,22 @@ const defaultAnswers: UserAnswers = {
     attendanceAllowance: false,
     carersAllowance: false,
     councilTaxReduction: false,
+    statePension: false,
+    pip: false,
+    dontKnow: false
   },
   hasDisability: 'no',
   dailyHelpNeeds: {
     washing: false,
     dressing: false,
-    eating: false,
-    medication: false,
+    cooking: false,
+    medicines: false,
+    bedChair: false,
+    toilet: false,
+    movingIndoors: false,
     none: true,
   },
+  hadFall: 'no',
   caringStatus: 'no',
   caringIsPaid: 'no',
   paysCouncilTax: 'yes',
@@ -32,55 +40,55 @@ const defaultAnswers: UserAnswers = {
 
 describe('calculateEligibleBenefits', () => {
   test('returns Free Bus Pass for over 75 in England', () => {
-    const answers = { ...defaultAnswers, ageBand: '75-84' };
+    const answers: UserAnswers = { ...defaultAnswers, ageBand: '75-84' };
     const benefits = calculateEligibleBenefits(answers);
     expect(benefits.some(b => b.id === 'free-bus-pass')).toBe(true);
   });
 
   test('returns Pension Credit for low income and under 16k savings', () => {
-    const answers = { ...defaultAnswers, incomeBand: 'under-200', savingsBand: 'under-6000' };
+    const answers: UserAnswers = { ...defaultAnswers, incomeBand: 'under-200', savingsBand: 'under-6000' };
     const benefits = calculateEligibleBenefits(answers);
     expect(benefits.some(b => b.id === 'pension-credit')).toBe(true);
   });
 
   test('returns Winter Fuel Payment for pension age on Pension Credit', () => {
-    const answers = { ...defaultAnswers, ageBand: '65-74', currentBenefits: { ...defaultAnswers.currentBenefits, pensionCredit: true } };
+    const answers: UserAnswers = { ...defaultAnswers, ageBand: '65-74', currentBenefits: { ...defaultAnswers.currentBenefits, pensionCredit: true } };
     const benefits = calculateEligibleBenefits(answers);
     expect(benefits.some(b => b.id === 'winter-fuel-payment')).toBe(true);
   });
 
   test('returns Winter Fuel Payment for pension age with low income', () => {
-    const answers = { ...defaultAnswers, ageBand: '75-84', incomeBand: 'under-200' };
+    const answers: UserAnswers = { ...defaultAnswers, ageBand: '75-84', incomeBand: 'under-200' };
     const benefits = calculateEligibleBenefits(answers);
     expect(benefits.some(b => b.id === 'winter-fuel-payment')).toBe(true);
   });
 
   test('does NOT return Winter Fuel Payment for high income and no means-tested benefits', () => {
-    const answers = { ...defaultAnswers, ageBand: '65-74', incomeBand: 'over-500' };
+    const answers: UserAnswers = { ...defaultAnswers, ageBand: '65-74', incomeBand: 'over-500' };
     const benefits = calculateEligibleBenefits(answers);
     expect(benefits.some(b => b.id === 'winter-fuel-payment')).toBe(false);
   });
 
   test('returns Attendance Allowance for over 65 with significant disability', () => {
-    const answers = { ...defaultAnswers, ageBand: '75-84', hasDisability: 'yes-lot' };
+    const answers: UserAnswers = { ...defaultAnswers, ageBand: '75-84', hasDisability: 'yes-lot' };
     const benefits = calculateEligibleBenefits(answers);
     expect(benefits.some(b => b.id === 'attendance-allowance')).toBe(true);
   });
 
   test('returns Carers Allowance for unpaid care', () => {
-    const answers = { ...defaultAnswers, caringStatus: 'i-care', caringIsPaid: 'no' };
+    const answers: UserAnswers = { ...defaultAnswers, caringStatus: 'i-care', caringIsPaid: 'no' };
     const benefits = calculateEligibleBenefits(answers);
     expect(benefits.some(b => b.id === 'carers-allowance')).toBe(true);
   });
 
   test('returns Council Tax Reduction for low income', () => {
-    const answers = { ...defaultAnswers, incomeBand: 'under-200', paysCouncilTax: 'yes' };
+    const answers: UserAnswers = { ...defaultAnswers, incomeBand: 'under-200', paysCouncilTax: 'yes' };
     const benefits = calculateEligibleBenefits(answers);
     expect(benefits.some(b => b.id === 'council-tax-reduction')).toBe(true);
   });
 
   test('returns Free TV Licence for over 75 on Pension Credit', () => {
-    const answers = { ...defaultAnswers, ageBand: '75-84', currentBenefits: { ...defaultAnswers.currentBenefits, pensionCredit: true } };
+    const answers: UserAnswers = { ...defaultAnswers, ageBand: '75-84', currentBenefits: { ...defaultAnswers.currentBenefits, pensionCredit: true } };
     const benefits = calculateEligibleBenefits(answers);
     expect(benefits.some(b => b.id === 'tv-licence')).toBe(true);
   });

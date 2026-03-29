@@ -6,7 +6,7 @@ import { Benefit } from '../types';
 import { supabase } from '../utils/supabase';
 
 export function ResultsScreen() {
-  const { answers, eligibleBenefits, setCurrentScreen, resetAnswers } = useApp();
+  const { answers, eligibleBenefits, setCurrentScreen, resetAnswers, user } = useApp();
 
   useEffect(() => {
     async function saveAssessment() {
@@ -15,7 +15,10 @@ export function ResultsScreen() {
 
       const { error } = await supabase
         .from('assessments')
-        .insert([{ answers }]);
+        .insert([{ 
+           answers,
+           ...(user ? { user_id: user.id } : {})
+        }]);
 
       if (error) {
         console.error('Failed to save assessment to Supabase:', error.message);

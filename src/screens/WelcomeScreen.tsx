@@ -5,7 +5,7 @@ import { Button } from '../components/Button';
 import { UserMode } from '../types';
 
 export function WelcomeScreen() {
-  const { updateAnswers, setCurrentScreen } = useApp();
+  const { updateAnswers, setCurrentScreen, user, signOut } = useApp();
   const [selectedMode, setSelectedMode] = useState<UserMode | null>(null);
   const [relationship, setRelationship] = useState('');
 
@@ -20,9 +20,23 @@ export function WelcomeScreen() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 px-4 py-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+      <div className="flex justify-end p-4 border-b border-gray-200/50 bg-white/50">
+        {user ? (
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-medium text-gray-700">{user.email}</span>
+            <button onClick={signOut} className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">Sign Out</button>
+          </div>
+        ) : (
+          <button onClick={() => setCurrentScreen('auth')} className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+            Sign In / Create Account
+          </button>
+        )}
+      </div>
+
+      <div className="px-4 py-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             ElderBenefit
           </h1>
@@ -115,6 +129,7 @@ export function WelcomeScreen() {
             It is not a guarantee. For accurate advice, please speak to Citizens Advice, Age UK, or your local council.
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

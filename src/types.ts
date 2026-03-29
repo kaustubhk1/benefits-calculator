@@ -93,4 +93,5 @@ export type Screen =
   | 'health'
   | 'caring'
   | 'results'
-  | 'letter';
+  | 'letter'
+  | 'auth';

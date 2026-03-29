@@ -1,5 +1,7 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User, Session } from '@supabase/supabase-js';
 import { UserAnswers, Screen, Benefit } from '../types';
+import { supabase } from '../utils/supabase';
 
 interface AppContextType {
   currentScreen: Screen;
@@ -9,6 +11,9 @@ interface AppContextType {
   resetAnswers: () => void;
   eligibleBenefits: Benefit[];
   setEligibleBenefits: (benefits: Benefit[]) => void;
+  user: User | null;
+  session: Session | null;
+  signOut: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -53,6 +58,24 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [currentScreen, setCurrentScreen] = useState<Screen>('welcome');
   const [answers, setAnswers] = useState<UserAnswers>(initialAnswers);
   const [eligibleBenefits, setEligibleBenefits] = useState<Benefit[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    // Check active sessions and sets the user
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for changes on auth state (logged in, signed out, etc.)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const updateAnswers = (updates: Partial<UserAnswers>) => {
     setAnswers(prev => ({ ...prev, ...updates }));
@@ -62,6 +85,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setAnswers(initialAnswers);
     setEligibleBenefits([]);
     setCurrentScreen('welcome');
+  };
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
   };
 
   return (
@@ -74,6 +101,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         resetAnswers,
         eligibleBenefits,
         setEligibleBenefits,
+        user,
+        session,
+        signOut,
       }}
     >
       {children}
