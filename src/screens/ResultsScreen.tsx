@@ -1,10 +1,29 @@
 import { CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
+import { useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { Button } from '../components/Button';
 import { Benefit } from '../types';
+import { supabase } from '../utils/supabase';
 
 export function ResultsScreen() {
-  const { eligibleBenefits, setCurrentScreen, resetAnswers } = useApp();
+  const { answers, eligibleBenefits, setCurrentScreen, resetAnswers } = useApp();
+
+  useEffect(() => {
+    async function saveAssessment() {
+      // Only attempt to save if the environment variables have been configured
+      if (!import.meta.env.VITE_SUPABASE_URL) return;
+
+      const { error } = await supabase
+        .from('assessments')
+        .insert([{ answers }]);
+
+      if (error) {
+        console.error('Failed to save assessment to Supabase:', error.message);
+      }
+    }
+
+    saveAssessment();
+  }, [answers]);
 
   const getConfidenceIcon = (confidence: Benefit['confidence']) => {
     switch (confidence) {
