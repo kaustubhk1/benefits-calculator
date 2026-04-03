@@ -9,12 +9,12 @@ export default defineConfig({
   reporter: 'html',
   use: {
     trace: 'on-first-retry',
-    video: 'on',
+    video: 'off',
   },
   projects: [
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
     },
   ],
 });

@@ -12,18 +12,18 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseClasses = 'font-semibold rounded-lg transition-colors focus:outline-none focus:ring-4 focus:ring-offset-2';
+  const baseClasses = 'font-bold rounded-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-offset-2 flex items-center justify-center shadow-sm disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 active:translate-y-0';
 
   const variantClasses = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
-    secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
-    outline: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-50 focus:ring-blue-500',
+    primary: 'bg-accessible-primary text-white hover:bg-accessible-hover hover:shadow-md focus:ring-indigo-500',
+    secondary: 'bg-white text-accessible-900 border-2 border-accessible-border hover:border-accessible-primary hover:bg-indigo-50 focus:ring-indigo-500',
+    outline: 'border-2 border-accessible-primary text-accessible-primary hover:bg-indigo-50 focus:ring-indigo-500',
   };
 
   const sizeClasses = {
-    small: 'px-4 py-2 text-base min-h-[44px]',
-    medium: 'px-6 py-3 text-lg min-h-[48px]',
-    large: 'px-8 py-4 text-xl min-h-[56px]',
+    small: 'px-6 py-3 text-lg min-h-[52px]',
+    medium: 'px-8 py-4 text-xl min-h-[60px]',
+    large: 'px-10 py-5 text-2xl min-h-[68px]',
   };
 
   return (

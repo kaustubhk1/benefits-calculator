@@ -23,7 +23,6 @@ export function AuthScreen() {
           password,
         });
         if (signInError) throw signInError;
-        // On success, state is auto-updated by AppContext listener, we just navigate back
         setCurrentScreen('welcome');
       } else {
         const { error: signUpError } = await supabase.auth.signUp({
@@ -31,8 +30,6 @@ export function AuthScreen() {
           password,
         });
         if (signUpError) throw signUpError;
-        // Supabase sends a confirmation email (if email confirmations are enabled in dashboard)
-        // For local development or disabled email confirms, they log in immediately
         setCurrentScreen('welcome');
       }
     } catch (err: any) {
@@ -43,60 +40,60 @@ export function AuthScreen() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg border-2 border-gray-200 p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+    <div className="min-h-screen bg-accessible-50 flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl border-2 border-gray-200 p-8 md:p-12">
+        <h1 className="text-4xl md:text-5xl font-bold text-accessible-900 mb-8 text-center">
           {isLogin ? 'Sign In' : 'Create Account'}
         </h1>
         
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <p className="text-red-700">{error}</p>
+          <div className="bg-red-50 border-l-4 border-red-500 p-6 mb-8 rounded-r-xl">
+            <p className="text-red-800 text-xl font-medium">{error}</p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+            <label className="block text-xl font-bold text-accessible-900 mb-3">Email Address</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-colors"
+              className="w-full px-6 py-5 text-xl border-2 border-gray-300 rounded-xl focus:border-accessible-primary focus:ring-4 focus:ring-indigo-200 outline-none transition-colors"
               required
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <label className="block text-xl font-bold text-accessible-900 mb-3">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-colors"
+              className="w-full px-6 py-5 text-xl border-2 border-gray-300 rounded-xl focus:border-accessible-primary focus:ring-4 focus:ring-indigo-200 outline-none transition-colors"
               required
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
+          <Button type="submit" className="w-full py-6 text-2xl mt-4" disabled={loading}>
+            {loading ? 'Processing...' : (isLogin ? 'Secure Sign In' : 'Secure Sign Up')}
           </Button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-10 text-center">
           <button
             type="button"
             onClick={() => setIsLogin(!isLogin)}
-            className="text-blue-600 hover:text-blue-800 font-medium"
+            className="text-xl md:text-2xl font-bold text-accessible-primary hover:text-accessible-hover hover:underline p-4 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500 transition-all"
           >
             {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
           </button>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-gray-200 text-center">
+        <div className="mt-12 pt-8 border-t-2 border-gray-100 text-center">
           <button
             onClick={() => setCurrentScreen('welcome')}
-            className="text-gray-500 hover:text-gray-700 font-medium"
+            className="text-xl md:text-2xl font-semibold text-gray-500 hover:text-gray-800 p-4 rounded-xl hover:bg-gray-50 transition-all"
           >
             ← Back to Home
           </button>

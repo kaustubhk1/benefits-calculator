@@ -24,11 +24,11 @@ export function WelcomeScreen() {
       <div className="flex justify-end p-4 border-b border-gray-200/50 bg-white/50">
         {user ? (
           <div className="flex items-center gap-4">
-            <span className="text-sm font-medium text-gray-700">{user.email}</span>
-            <button onClick={signOut} className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">Sign Out</button>
+            <span className="text-lg md:text-xl font-semibold text-accessible-900">{user.email}</span>
+            <button onClick={signOut} className="text-lg md:text-xl font-bold text-accessible-primary hover:text-accessible-hover transition-colors px-4 py-2 hover:bg-indigo-50 rounded-lg">Sign Out</button>
           </div>
         ) : (
-          <button onClick={() => setCurrentScreen('auth')} className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+          <button onClick={() => setCurrentScreen('auth')} className="text-lg md:text-xl font-bold text-accessible-primary hover:text-accessible-hover transition-colors px-4 py-2 hover:bg-indigo-50 rounded-lg">
             Sign In / Create Account
           </button>
         )}
