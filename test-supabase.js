@@ -1,6 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient('https://ezgtpraifwtwrtcaojou.supabase.co', 'sb_publishable_xfNlNtu2NFm00CZEHiOfMw_-q2YI744');
+// Use environment variables for security
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables. Please check your .env file.');
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 async function runTest() {
   console.log('Testing pure INSERT without reading it back...');
